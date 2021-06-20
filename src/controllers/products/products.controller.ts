@@ -9,16 +9,21 @@ import {
   Post,
   Put,
   Query,
+  ParseIntPipe,
 } from '@nestjs/common';
 
 import { ProductsService } from '../../services/products/products.service';
+import {
+  CreateProductDto,
+  UpdateProductDto,
+} from '../../dtos/products/products.dtos';
 
 @Controller('products')
 export class ProductsController {
   constructor(private productService: ProductsService) {}
 
   @Get(':id')
-  getOne(@Param('id') id: number) {
+  getOne(@Param('id', ParseIntPipe) id: number) {
     const oneProd = this.productService.findOne(id);
     return {
       Message: 'One product',
@@ -41,7 +46,7 @@ export class ProductsController {
   }
 
   @Post()
-  create(@Body() payload: any) {
+  create(@Body() payload: CreateProductDto) {
     const created = this.productService.create(payload);
     return {
       Message: 'Product created',
@@ -50,7 +55,7 @@ export class ProductsController {
   }
 
   @Put(':id')
-  update(@Param('id') id: number, @Body() payload: any) {
+  update(@Param('id') id: number, @Body() payload: UpdateProductDto) {
     const updated = this.productService.update(id, payload);
     return {
       Message: 'Product updated',
